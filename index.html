@@ -133,7 +133,7 @@
 
 <body>
     <!-- PDF 뷰어 -->
-    <iframe src="Hyunmin_Portfolio_PD.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+    <iframe id = "pdf-frame" src="Hyunmin_Portfolio_PD.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
 
     <!-- 다운로드 버튼 -->
     <div class="download-button-container">
@@ -149,6 +149,37 @@
         </a>
     </div>
 
+    <!-- GA4 이벤트 트래킹 (iframe 내 스크롤) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var iframe = document.getElementById("pdf-frame");
+
+            iframe.addEventListener("load", function () {
+                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                var lastScroll = 0;
+                var thresholds = [25, 50, 75, 100];
+
+                iframeDoc.addEventListener("scroll", function () {
+                    var scrollHeight = iframeDoc.documentElement.scrollHeight - iframeDoc.documentElement.clientHeight;
+                    var scrollTop = iframeDoc.documentElement.scrollTop;
+                    var scrollPercent = Math.round((scrollTop / scrollHeight) * 100);
+
+                    thresholds.forEach(function (threshold) {
+                        if (scrollPercent >= threshold && lastScroll < threshold) {
+                            gtag("event", "iframe_scroll", {
+                                event_category: "PDF",
+                                event_label: "Portfolio",
+                                value: threshold
+                            });
+                            lastScroll = threshold;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- Download Button Click / UTM -->
     <script>
         function getUTMParam(param) {
             let urlParams = new URLSearchParams(window.location.search);
