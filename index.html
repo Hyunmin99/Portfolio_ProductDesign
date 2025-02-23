@@ -133,7 +133,7 @@
 
 <body>
     <!-- PDF 뷰어 -->
-    <iframe src="Hyunmin_Portfolio_PD.pdf#toolbar=0&navpanes=0&scrollbar=0&embedded=true"></iframe>
+    <iframe src="Hyunmin_Portfolio_PD.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
 
     <!-- 다운로드 버튼 -->
     <div class="download-button-container">
@@ -148,6 +148,30 @@
             <span class="tooltip">PDF Download</span>
         </a>
     </div>
+
+    <script>
+        function getUTMParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || "unknown";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var downloadButton = document.querySelector(".download-btn");
+
+            if (downloadButton) {
+                downloadButton.addEventListener("click", function () {
+                    gtag("event", "download", {
+                        event_category: "PDF",
+                        event_label: "Portfolio",
+                        value: 1,
+                        utm_source: getUTMParam("utm_source"),
+                        utm_medium: getUTMParam("utm_medium"),
+                        utm_campaign: getUTMParam("utm_campaign")
+                    });
+                });
+            }
+        });
+    </script>
     
     
 </body>
