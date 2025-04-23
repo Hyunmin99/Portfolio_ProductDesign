@@ -27,6 +27,35 @@
             width: 100%;
             height: calc(100vh - 30px);
             border: 1px solid #ccc;
+            display: none;
+        }
+
+        .loading-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            color: #333;
+            font-size: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .download-button-container {
@@ -135,8 +164,15 @@
     <script> 
         const FILE_NAME = "Hyunmin_Portfolio_PD_250423.pdf";
     </script>
+
+    <!-- 로딩 애니메이션 -->
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">PDF를 불러오는 중입니다...</div>
+    </div>
+
     <!-- PDF 뷰어 -->
-    <iframe id = "pdf-frame" src=""></iframe>
+    <iframe id="pdf-frame" src=""></iframe>
 
     <!-- 다운로드 버튼 -->
     <div class="download-button-container">
@@ -207,9 +243,17 @@
     </script>
     
     <script>
-        //iframe scr 및 다운로드 링크 설정
-        document.getElementById('pdf-frame').src = `${FILE_NAME}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`;
-        document.querySelector('.Btn').herf = FILE_NAME;
+        //iframe src 및 다운로드 링크 설정
+        const pdfFrame = document.getElementById('pdf-frame');
+        const loadingContainer = document.querySelector('.loading-container');
+
+        pdfFrame.onload = function() {
+            loadingContainer.style.display = 'none';
+            pdfFrame.style.display = 'block';
+        };
+
+        pdfFrame.src = `${FILE_NAME}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`;
+        document.querySelector('.Btn').href = FILE_NAME;
     </script>
     
 </body>
