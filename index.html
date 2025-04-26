@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hyunmin Portfolio</title>
 
     <!-- Google tag (gtag.js) -->
@@ -20,14 +20,19 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 10px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         iframe {
             width: 100%;
-            height: calc(100vh - 30px);
-            border: 1px solid #ccc;
+            height: 100vh;
+            border: none;
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         .loading-container {
@@ -36,6 +41,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
+            z-index: 1000;
         }
 
         .loading-spinner {
@@ -62,7 +68,7 @@
             position: fixed;
             top: 24px;
             right: 40px;
-            z-index: 1000;
+            z-index: 1001;
         }
 
         .Btn {
@@ -155,6 +161,22 @@
             100% {
                 transform: translateY(0px);
                 opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .download-button-container {
+                top: 16px;
+                right: 16px;
+            }
+
+            .Btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .tooltip {
+                right: 50px;
             }
         }
     </style>
