@@ -12,14 +12,7 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-208R78Z7W0');
-    </script>
-
-    <!-- PDF.js 라이브러리 추가 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
 
     <style>
@@ -32,14 +25,13 @@
             background-color: #4d4d4d;
         }
 
-        #pdf-container {
+        #pdf-frame {
             width: 100%;
             height: 100vh;
-            overflow: auto;
+            border: none;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #4d4d4d;
         }
 
         .loading-container {
@@ -69,122 +61,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .download-button-container {
-            position: fixed;
-            top: 24px;
-            right: 40px;
-            z-index: 1001;
-        }
-
-        .Btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background-color: rgb(27, 27, 27);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            transition-duration: .3s;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
-        }
-
-        .svgIcon {
-           fill: #FAFCFF;
-        }
-
-        .icon2 {
-            width: 18px;
-            height: 5px;
-            border-bottom: 2px solid #FAFCFF;
-            border-left: 2px solid #FAFCFF;
-            border-right: 2px solid #FAFCFF;
-        }
-
-        .tooltip {
-            position: absolute;
-            right: 70px;
-            opacity: 0;
-            background-color: rgb(12, 12, 12);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition-duration: .2s;
-            pointer-events: none;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        .tooltip::before {
-            position: absolute;
-            content: "";
-            width: 10px;
-            height: 10px;
-            background-color: rgb(12, 12, 12);
-            background-size: 1000%;
-            background-position: center;
-            transform: rotate(45deg);
-            right: -5px;
-            /* top: 50%; */
-            /* margin-top: -5px; */
-            transition-duration: .3s;
-        }
-
-        .Btn:hover .tooltip {
-            opacity: 1;
-            transition-duration: .3s;
-        }
-
-        .Btn:hover {
-            background-color: #007AFF;
-            transition-duration: .3s;
-        }
-
-        .Btn:hover .icon2 {
-            border-bottom: 2px solid rgb(235, 235, 235);
-            border-left: 2px solid rgb(235, 235, 235);
-            border-right: 2px solid rgb(235, 235, 235);
-        }
-
-        .Btn:hover .svgIcon {
-            fill: rgb(255, 255, 255);
-            animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        }
-
-        @keyframes slide-in-top {
-            0% {
-                transform: translateY(-10px);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translateY(0px);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .download-button-container {
-                top: 16px;
-                right: 16px;
-            }
-
-            .Btn {
-                width: 40px;
-                height: 40px;
-            }
-
-            .tooltip {
-                right: 50px;
-            }
         }
 
         .control-buttons {
@@ -242,6 +118,97 @@
                 height: 20px;
             }
         }
+
+        .Btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background-color: rgb(27, 27, 27);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
+        }
+
+        .svgIcon {
+            fill: #FAFCFF;
+        }
+
+        .icon2 {
+            width: 18px;
+            height: 5px;
+            border-bottom: 2px solid #FAFCFF;
+            border-left: 2px solid #FAFCFF;
+            border-right: 2px solid #FAFCFF;
+        }
+
+        .tooltip {
+            position: absolute;
+            right: 70px;
+            opacity: 0;
+            background-color: rgb(12, 12, 12);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition-duration: .2s;
+            pointer-events: none;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .tooltip::before {
+            position: absolute;
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-color: rgb(12, 12, 12);
+            background-size: 1000%;
+            background-position: center;
+            transform: rotate(45deg);
+            right: -5px;
+            transition-duration: .3s;
+        }
+
+        .Btn:hover .tooltip {
+            opacity: 1;
+            transition-duration: .3s;
+        }
+
+        .Btn:hover {
+            background-color: #007AFF;
+            transition-duration: .3s;
+        }
+
+        .Btn:hover .icon2 {
+            border-bottom: 2px solid rgb(235, 235, 235);
+            border-left: 2px solid rgb(235, 235, 235);
+            border-right: 2px solid rgb(235, 235, 235);
+        }
+
+        .Btn:hover .svgIcon {
+            fill: rgb(255, 255, 255);
+            animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        @keyframes slide-in-top {
+            0% {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0px);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -256,8 +223,8 @@
         <div class="loading-text">PDF를 불러오는 중입니다...</div>
     </div>
 
-    <!-- PDF 컨테이너 -->
-    <div id="pdf-container"></div>
+    <!-- PDF 뷰어 -->
+    <iframe id="pdf-frame" src=""></iframe>
 
     <!-- 컨트롤 버튼 -->
     <div class="control-buttons">
@@ -282,150 +249,31 @@
         </a>
     </div>
 
-    <!-- GA4 이벤트 트래킹 (iframe 내 스크롤) -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var iframe = document.getElementById("pdf-frame");
+        const pdfFrame = document.getElementById('pdf-frame');
+        const loadingContainer = document.querySelector('.loading-container');
 
-            iframe.addEventListener("load", function () {
-                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                var lastScroll = 0;
-                var thresholds = [25, 50, 75, 100];
+        pdfFrame.onload = function() {
+            loadingContainer.style.display = 'none';
+        };
 
-                iframeDoc.addEventListener("scroll", function () {
-                    var scrollHeight = iframeDoc.documentElement.scrollHeight - iframeDoc.documentElement.clientHeight;
-                    var scrollTop = iframeDoc.documentElement.scrollTop;
-                    var scrollPercent = Math.round((scrollTop / scrollHeight) * 100);
-
-                    thresholds.forEach(function (threshold) {
-                        if (scrollPercent >= threshold && lastScroll < threshold) {
-                            gtag("event", "iframe_scroll", {
-                                event_category: "PDF",
-                                event_label: "Portfolio",
-                                value: threshold
-                            });
-                            lastScroll = threshold;
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-
-    <!-- Download Button Click / UTM -->
-    <script>
-        function getUTMParam(param) {
-            let urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param) || "unknown";
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            var downloadButton = document.querySelector(".download-btn");
-
-            if (downloadButton) {
-                downloadButton.addEventListener("click", function () {
-                    gtag("event", "download", {
-                        event_category: "PDF",
-                        event_label: "Portfolio",
-                        value: 1,
-                        utm_source: getUTMParam("utm_source"),
-                        utm_medium: getUTMParam("utm_medium"),
-                        utm_campaign: getUTMParam("utm_campaign")
-                    });
-                });
-            }
-        });
-    </script>
-    
-    <script>
-        let currentScale = 1;
-        const scaleStep = 0.1;
-        const minScale = 0.5;
-        const maxScale = 2;
-        let pdfPages = []; // PDF 페이지 정보 저장
-
-        // PDF.js를 사용하여 PDF 렌더링
-        async function renderPDF() {
-            const loadingContainer = document.querySelector('.loading-container');
-            const pdfContainer = document.getElementById('pdf-container');
-            pdfContainer.innerHTML = '';
-            pdfPages = []; // 페이지 정보 초기화
-            
-            try {
-                const pdf = await pdfjsLib.getDocument(FILE_NAME).promise;
-                loadingContainer.style.display = 'none';
-                
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 1 });
-                    
-                    // 화면 너비에 맞춰 스케일 조정
-                    const baseScale = window.innerWidth / viewport.width;
-                    
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = viewport.width * baseScale;
-                    canvas.height = viewport.height * baseScale;
-                    
-                    await page.render({
-                        canvasContext: context,
-                        viewport: page.getViewport({ scale: baseScale })
-                    }).promise;
-                    
-                    // 페이지 정보 저장
-                    pdfPages.push({
-                        canvas: canvas,
-                        viewport: viewport,
-                        baseScale: baseScale
-                    });
-                    
-                    pdfContainer.appendChild(canvas);
-                }
-                
-                // 초기 스케일 적용
-                updateScale(currentScale);
-            } catch (error) {
-                console.error('PDF 로딩 중 오류 발생:', error);
-                loadingContainer.querySelector('.loading-text').textContent = 'PDF 로딩 중 오류가 발생했습니다.';
-            }
-        }
-
-        // 스케일 업데이트 함수
-        function updateScale(newScale) {
-            pdfPages.forEach(page => {
-                const canvas = page.canvas;
-                const viewport = page.viewport;
-                const baseScale = page.baseScale;
-                
-                // 새로운 크기 계산
-                const finalScale = baseScale * newScale;
-                canvas.style.width = `${viewport.width * finalScale}px`;
-                canvas.style.height = `${viewport.height * finalScale}px`;
-            });
-        }
+        // PDF 뷰어 설정
+        pdfFrame.src = `${FILE_NAME}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=100`;
+        document.querySelector('.Btn').href = FILE_NAME;
 
         // 확대/축소 버튼 이벤트 리스너
         document.getElementById('zoom-in').addEventListener('click', () => {
-            if (currentScale < maxScale) {
-                currentScale += scaleStep;
-                updateScale(currentScale);
-            }
+            const currentZoom = parseInt(pdfFrame.style.zoom || '100');
+            pdfFrame.style.zoom = `${currentZoom + 10}%`;
         });
 
         document.getElementById('zoom-out').addEventListener('click', () => {
-            if (currentScale > minScale) {
-                currentScale -= scaleStep;
-                updateScale(currentScale);
+            const currentZoom = parseInt(pdfFrame.style.zoom || '100');
+            if (currentZoom > 50) {
+                pdfFrame.style.zoom = `${currentZoom - 10}%`;
             }
         });
-
-        // PDF 렌더링 시작
-        renderPDF();
-
-        // 다운로드 버튼 설정
-        document.querySelector('.Btn').href = FILE_NAME;
     </script>
-    
 </body>
 
 </html>
