@@ -35,6 +35,7 @@
             background: #4d4d4d;
             z-index: 1;
         }
+
         #pdf-frame {
             width: 100%;
             height: 100%;
@@ -67,8 +68,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .control-buttons {
@@ -116,7 +122,8 @@
                 right: 16px;
             }
 
-            .zoom-btn, .Btn {
+            .zoom-btn,
+            .Btn {
                 width: 40px;
                 height: 40px;
             }
@@ -273,7 +280,10 @@
         }
 
         @media (max-width: 600px) {
-            #pdf-frame, .control-buttons, .loading-container {
+
+            #pdf-frame,
+            .control-buttons,
+            .loading-container {
                 display: none;
             }
 
@@ -285,7 +295,7 @@
 </head>
 
 <body>
-    <script> 
+    <script>
         const FILE_NAME = "Hyunmin_Portfolio_250511.pdf";
     </script>
 
@@ -303,19 +313,19 @@
 
     <!-- PDF 뷰어 -->
     <div id="pdf-wrapper" style="width:100vw; height:100vh; overflow:hidden;">
-        <iframe id="pdf-frame" src="" scrolling="auto" ></iframe>
+        <iframe id="pdf-frame" src="" scrolling="auto"></iframe>
     </div>
 
     <!-- 컨트롤 버튼 -->
     <div class="control-buttons">
         <button class="zoom-btn" id="zoom-out">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 13H5v-2h14v2z"/>
+                <path d="M19 13H5v-2h14v2z" />
             </svg>
         </button>
         <button class="zoom-btn" id="zoom-in">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
             </svg>
         </button>
         <a class="Btn" href="" download>
@@ -341,7 +351,7 @@
         // 디바이스 체크 및 PDF 로드
         if (window.innerWidth > 600) {
             // 데스크톱에서는 PDF 로드
-            pdfFrame.onload = function() {
+            pdfFrame.onload = function () {
                 loadingContainer.style.display = 'none';
             };
             pdfFrame.src = `${FILE_NAME}#toolbar=0&navpanes=0&scrollbar=0&view=FitH&zoom=100`;
@@ -364,6 +374,62 @@
             loadingContainer.style.display = 'none';
             document.querySelector('.control-buttons').style.display = 'none';
         }
+    </script>
+
+    <!-- GA4 이벤트 트래킹 (iframe 내 스크롤) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var iframe = document.getElementById("pdf-frame");
+
+            iframe.addEventListener("load", function () {
+                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                var lastScroll = 0;
+                var thresholds = [25, 50, 75, 100];
+
+                iframeDoc.addEventListener("scroll", function () {
+                    var scrollHeight = iframeDoc.documentElement.scrollHeight - iframeDoc.documentElement.clientHeight;
+                    var scrollTop = iframeDoc.documentElement.scrollTop;
+                    var scrollPercent = Math.round((scrollTop / scrollHeight) * 100);
+
+                    thresholds.forEach(function (threshold) {
+                        if (scrollPercent >= threshold && lastScroll < threshold) {
+                            gtag("event", "iframe_scroll", {
+                                event_category: "PDF",
+                                event_label: "Portfolio",
+                                value: threshold
+                            });
+                            lastScroll = threshold;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- Download Button Click / UTM -->
+    <script>
+        function getUTMParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || "unknown";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // 모든 다운로드 버튼에 이벤트 리스너 추가
+            var downloadButtons = document.querySelectorAll(".Btn, .mobile-download-button");
+
+            downloadButtons.forEach(function(button) {
+                button.addEventListener("click", function () {
+                    gtag("event", "download", {
+                        event_category: "PDF",
+                        event_label: "Portfolio",
+                        value: 1,
+                        utm_source: getUTMParam("utm_source"),
+                        utm_medium: getUTMParam("utm_medium"),
+                        utm_campaign: getUTMParam("utm_campaign")
+                    });
+                });
+            });
+        });
     </script>
 </body>
 
