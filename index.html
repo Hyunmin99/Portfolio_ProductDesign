@@ -422,7 +422,7 @@
         });
     </script>
 
-    <!-- Download Button Click / UTM -->
+    <!-- Download Button Click / UTM
     <script>
         function getUTMParam(param) {
             let urlParams = new URLSearchParams(window.location.search);
@@ -446,7 +446,85 @@
                 });
             });
         });
+    </script> -->
+    <!-- GA4: file_download 수동 트래킹 (권장 스키마 준수) -->
+    <script>
+        // 안전 가드
+        function sendGAEvent(name, params, cb) {
+            if (typeof gtag === "function") {
+            gtag("event", name, {
+                ...params,
+                // 전송 보장용 콜백
+                event_callback: function() { if (typeof cb === "function") cb(); }
+            });
+            // 혹시 콜백이 안 올 때 대비 타임아웃(최대 1초 대기)
+            setTimeout(function(){ if (typeof cb === "function") cb(); }, 1000);
+            } else {
+            // gtag 미탑재 시에도 UX 흐름 깨지 않도록 즉시 진행
+            if (typeof cb === "function") cb();
+            }
+        }
+
+        // 파일명/확장자 보조 추출
+        function parseFileMeta(url) {
+            try {
+            var u = new URL(url, window.location.href);
+            var path = u.pathname.split("/").pop() || "";
+            var qname = (u.searchParams.get("filename") || "").trim(); // 필요시 쿼리로 이름 전달하는 케이스 대비
+            var fileName = qname || path;
+            var dot = fileName.lastIndexOf(".");
+            var ext = dot > -1 ? fileName.slice(dot + 1).toLowerCase() : "";
+            return { file_name: fileName || "unknown", file_extension: ext || "unknown", link_url: u.href };
+            } catch(e) {
+            return { file_name: "unknown", file_extension: "unknown", link_url: url };
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var buttons = document.querySelectorAll(".Btn, .mobile-download-button");
+
+            buttons.forEach(function(btn){
+            // 중복 전송 방지 플래그
+            var sending = false;
+
+            btn.addEventListener("click", function (e) {
+                // 이동 대상 URL 결정: a태그 href > data-href > 현재 버튼의 data-link-url
+                var href = (btn.tagName === "A" && btn.href) || btn.getAttribute("data-href") || btn.getAttribute("data-link-url");
+                var isNavigating = !!href;
+
+                // 자동수집 대비: 커스텀 버튼/동적 다운로드면 수동 트래킹 필요
+                var meta = parseFileMeta(href || "portfolio.pdf");
+
+                // 자동 파라미터에 맞춰 전달
+                var params = {
+                file_name: meta.file_name,          // 예: Portfolio.pdf
+                file_extension: meta.file_extension, // 예: pdf
+                link_text: (btn.textContent || "download").trim(),
+                link_url: meta.link_url || window.location.href,
+                link_domain: (function(){ try { return new URL(meta.link_url).hostname; } catch(e){ return "unknown"; } })(),
+                // 필요시 커스텀 파라미터 추가 (snake_case)
+                content_category: "portfolio",
+                content_type: "pdf"
+                };
+
+                if (sending) return; // 중복 클릭 방지
+                sending = true;
+
+                if (isNavigating) {
+                // 네비게이션을 콜백 이후로 지연해 전송 보장
+                e.preventDefault();
+                sendGAEvent("file_download", params, function(){
+                    window.location.href = href;
+                });
+                } else {
+                // 네비게이션이 없다면 즉시 전송
+                sendGAEvent("file_download", params, function(){ sending = false; });
+                }
+            }, { passive: false });
+            });
+        });
     </script>
+
 </body>
 
 </html>
